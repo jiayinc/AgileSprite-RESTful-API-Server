@@ -175,5 +175,92 @@ Users can update their general information
 Yet implemented
 
 ### Contact
+Contact feature
+#### Add a Contact
+Users can add a contact
+- Request Type: POST
+- Request Address: /contact/add/  
+- Request Fields:
+    - token: String
+    - age: Integer
+    - email: String
+    - birthday: Date
+    - name: String
+- Return Fields:
+    - code: Integer
+    - msg: String
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'name': 'gg',
+    'age': 23,
+    'email': 'asd@qq.com',
+    'birthday': 2020-01-21
+}
+```
+- Sample Return:
+```
+# Successfully added 
+{
+    "code": 0,
+    "msg": "add success"
+}
+```
 
-To be updated soon
+#### Get All Contacts
+Users can get all of contacts
+- Request Type: POST
+- Request Address: /contact/get_all/  
+- Request Fields:
+    - token: String
+- Return Fields:
+    - code: Integer
+    - msg: String
+    - contacts: List of Contacts, where each contact contains
+      - id: Integer, contact's ID
+      - user_id: Integer
+      - age: Integer
+      - name: String
+      - email: String
+      - birthday: Date
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'name': 'gg',
+    'age': 23,
+    'email': 'asd@qq.com',
+    'birthday': 2020-01-21
+}
+```
+- Sample Return:
+```
+{
+    "code": 0,
+    "msg": "get success",
+    "contacts": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "age": 23,
+            "name": "gg",
+            "email": "asd@qq.com",
+            "birthday": "2020-01-21"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "age": 23,
+            "name": "gg",
+            "email": "asd@qq.com",
+            "birthday": "2020-01-21"
+        }
+    ]
+}
+```
+#### Get a Contact
+Yet implemented
+
+#### Delete a Contact
+Yet implemented
