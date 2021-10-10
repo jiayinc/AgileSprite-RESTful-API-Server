@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'account',
     'contact',
+    'story',
 ]
 
 MIDDLEWARE = [
