@@ -4,14 +4,14 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from .models import Contact
 from common.common import get_user_id
-
+from common.code import *
 
 class AddViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
 
         email = request.data.get('email')
@@ -20,10 +20,10 @@ class AddViewSet(APIView):
         try:
             Contact.objects.create(email=email, name=name, user_id=user_id, birthday=birthday)
         except Exception as e:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": CONTACT_ADD_SUCCESS,
                                  "msg": str(e)})
 
-        return JsonResponse({"code": 0,
+        return JsonResponse({"code": CONTACT_ADD_FAIL,
                              "msg": "add success"})
 
 
@@ -32,11 +32,11 @@ class GetAllViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
         contacts = Contact.objects.filter(user_id=user_id)
 
-        return JsonResponse({"code": 0,
+        return JsonResponse({"code": CONTACT_GET_ALL_SUCCESS,
                              "msg": "get success",
                              "contacts": list(contacts.values())})
 
@@ -46,13 +46,13 @@ class GetViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
 
         contact_id = request.data.get('contact_id')
         contacts = Contact.objects.filter(user_id=user_id, id=contact_id)
 
-        return JsonResponse({"code": 0,
+        return JsonResponse({"code": CONTACT_GET_SUCCESS,
                              "msg": "get success",
                              "contacts": list(contacts.values())})
 
@@ -62,13 +62,13 @@ class DeleteViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
 
         contact_id = request.data.get('contact_id')
         Contact.objects.filter(user_id=user_id, id=contact_id).delete()
 
-        return JsonResponse({"code": 0,
+        return JsonResponse({"code": CONTACT_DELETE_SUCCESS,
                              "msg": "delete success"})
 
 
@@ -77,7 +77,7 @@ class UpdateViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
 
         name = request.data.get('name')
@@ -107,8 +107,8 @@ class UpdateViewSet(APIView):
         try:
             contacts.save()
         except Exception as e:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": CONTACT_UPDATE_FAIL,
                                  "msg": str(e)})
 
-        return JsonResponse({"code": 0,
+        return JsonResponse({"code": CONTACT_UPDATE_SUCCESS,
                              "msg": "updated"})

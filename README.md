@@ -40,6 +40,9 @@ python manage.py runserver ip:port
 http(s)://your_ip:your_port/
 ```
 
+### Return Code
+Check /common/code.py
+
 ### Account
 This app provides operations to manipulate an account.
 #### Register
@@ -182,7 +185,6 @@ Users can add a contact
 - Request Address: /contact/add/  
 - Request Fields:
     - token: String
-    - age: Integer
     - email: String
     - birthday: Date
     - name: String
@@ -194,7 +196,6 @@ Users can add a contact
 {
     'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
     'name': 'gg',
-    'age': 23,
     'email': 'asd@qq.com',
     'birthday': 2020-01-21
 }
@@ -220,18 +221,20 @@ Users can get all of contacts
     - contacts: List of Contacts, where each contact contains
       - id: Integer, contact's ID
       - user_id: Integer
-      - age: Integer
       - name: String
       - email: String
       - birthday: Date
+      - company: String
+      - phone: String
+      - mobile: String
+      - address: String
+      - relationship: String
+      - notes: String
+      - image_address: String
 - Sample Request:
 ```
 {
     'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
-    'name': 'gg',
-    'age': 23,
-    'email': 'asd@qq.com',
-    'birthday': 2020-01-21
 }
 ```
 - Sample Return:
@@ -241,26 +244,150 @@ Users can get all of contacts
     "msg": "get success",
     "contacts": [
         {
-            "id": 1,
-            "user_id": 1,
-            "age": 23,
-            "name": "gg",
-            "email": "asd@qq.com",
-            "birthday": "2020-01-21"
-        },
-        {
             "id": 2,
             "user_id": 1,
-            "age": 23,
-            "name": "gg",
-            "email": "asd@qq.com",
-            "birthday": "2020-01-21"
+            "name": "abc",
+            "company": "abc.co",
+            "email": "abc@qq.com",
+            "phone": "123456",
+            "mobile": "654321",
+            "address": "Adddddressssss",
+            "birthday": "1999-08-01",
+            "relationship": "None",
+            "notes": "no",
+            "image_address": "http://wwwwwwww.qqqqqqqaaaa.com"
         }
     ]
 }
 ```
 #### Get a Contact
-Yet implemented
+Users can a specific contact
+- Request Type: POST
+- Request Address: /contact/get/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer
+- Return Fields:
+    - code: Integer
+    - msg: String
+    - contacts: List of Contacts, where each contact contains
+      - id: Integer, contact's ID
+      - user_id: Integer
+      - name: String
+      - email: String
+      - birthday: Date
+      - company: String
+      - phone: String
+      - mobile: String
+      - address: String
+      - relationship: String
+      - notes: String
+      - image_address: String
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'contact_id': 2,
+}
+```
+- Sample Return:
+```
+{
+    "code": 0,
+    "msg": "get success",
+    "contacts": [
+        {
+            "id": 2,
+            "user_id": 1,
+            "name": "abc",
+            "company": "abc.co",
+            "email": "abc@qq.com",
+            "phone": "123456",
+            "mobile": "654321",
+            "address": "Adddddressssss",
+            "birthday": "1999-08-01",
+            "relationship": "None",
+            "notes": "no",
+            "image_address": "http://wwwwwwww.qqqqqqqaaaa.com"
+        }
+    ]
+}
+```
 
 #### Delete a Contact
-Yet implemented
+Users can delete a contact
+- Request Type: POST
+- Request Address: /contact/delete/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer
+- Return Fields:
+    - code: Integer
+    - msg: String
+- Sample Request:
+```
+{
+    'token': 'de99673b5ca9832e5a4f616c8ec81f563f4e0d84',
+    'contact_id': 2,
+}
+```
+- Sample Return:
+```
+# Successfully deleted
+{
+    "code": 0,
+    "msg": "delete success"
+}
+```
+#### Update Contact Information
+Users can update a contact information
+- Request Type: POST
+- Request Address: /contact/update/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer, contact's ID
+    - name: String
+    - email: String
+    - birthday: Date
+    - company: String
+    - phone: String
+    - mobile: String
+    - address: String
+    - relationship: String
+    - notes: String
+    - image_address: String
+- Return Fields:
+    - code: Integer
+    - msg: String
+- Sample Request:
+```
+{
+    'token': '3b6a7f2885ecbaec38261c2cdf7be0b1263029f7',
+    'contact_id': 2,
+    'name': 'abc',
+    'company': 'abc.co',
+    'email': 'abc@qq.com',
+    'phone': '123456',
+    'mobile': '654321',
+    'address': 'Adddddressssss',
+    'birthday': 1999-08-01,
+    'relationship': 'None',
+    'notes': 'no',
+    'image_address': 'http://wwwwwwww.qqqqqqqaaaa.com',
+}
+```
+- Sample Return:
+```
+# Wrong date format provided 
+{
+    "code": 0,
+    "msg": "['“2011-01-” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ] format.']"
+}
+```
+```
+# Successfully updated 
+{
+    "code": 0,
+    "msg": "updated"
+}
+```
