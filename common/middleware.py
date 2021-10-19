@@ -6,4 +6,5 @@ class CustomHeaderMiddleware:
         response = self.get_response(request)
         response['Created-By'] = "JYC"
         response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Headers'] = '*'
         return response
