@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'account',
     'contact',
     'story',
+
+    'mycalendar',
+    'group',
 ]
 
 MIDDLEWARE = [

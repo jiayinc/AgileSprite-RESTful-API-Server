@@ -21,4 +21,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('contact/', include('contact.urls')),
     path('story/', include('story.urls')),
+
+    path('calendar/', include('mycalendar.urls')),
+    path('group/', include('group.urls')),
 ]
