@@ -70,14 +70,14 @@ Users can create a new account
 ```
 # Username exists
 {
-    "code": 0,
+    "code": 106,
     "msg": "UNIQUE constraint failed: account_extendeduser.username"
 }
 ```
 ```
 # Successfully created 
 {
-    "code": 0,
+    "code": 105,
     "msg": "create success"
 }
 ```
@@ -103,14 +103,14 @@ Users can sign in if they have registered before
 ```
 # Wrong login information
 {
-    "code": 0,
+    "code": 101,
     "msg": "wrong username/password"
 }
 ```
 ```
 # Successfully signed in 
 {
-    "code": 0,
+    "code": 100,
     "msg": "login success",
     "token": "bb41305c3996ab47e4d729821b3c6232c003099d"
 }
@@ -134,19 +134,27 @@ Users can sign out if they have signed in
 ```
 # Successfully log out
 {
-    "code": 0,
+    "code": 115,
     "msg": "log out performed, token was disabled"
 }
+# wrong token
+{
+    "code": 120,
+    "msg": "token error"
+}
 ```
-#### Update Information (No critical information included)
+#### Update Information (critical information included)
 Users can update their general information
 - Request Type: POST
 - Request Address: /account/update/  
 - Request Fields:
-    - token: String
-    - dob: Date
-    - first_name: String
-    - last_name: String
+    - token: String, mandatory
+    - with one of more of following parameter(s)
+      - dob: Date
+      - first_name: String
+      - last_name: String
+      - password: String
+      - email: String, must be unique or failure on updating
 - Return Fields:
     - code: Integer
     - msg: String
@@ -163,19 +171,17 @@ Users can update their general information
 ```
 # Wrong date format provided 
 {
-    "code": 0,
+    "code": 111,
     "msg": "['“2011-01-” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ] format.']"
 }
 ```
 ```
 # Successfully updated 
 {
-    "code": 0,
+    "code": 110,
     "msg": "updated"
 }
 ```
-#### Update Information (critical information)
-Yet implemented
 
 ### Contact
 Contact feature
@@ -204,7 +210,7 @@ Users can add a contact
 ```
 # Successfully added 
 {
-    "code": 0,
+    "code": 200,
     "msg": "add success"
 }
 ```
@@ -240,7 +246,7 @@ Users can get all of contacts
 - Sample Return:
 ```
 {
-    "code": 0,
+    "code": 215,
     "msg": "get success",
     "contacts": [
         {
@@ -293,7 +299,7 @@ Users can a specific contact
 - Sample Return:
 ```
 {
-    "code": 0,
+    "code": 220,
     "msg": "get success",
     "contacts": [
         {
@@ -335,7 +341,7 @@ Users can delete a contact
 ```
 # Successfully deleted
 {
-    "code": 0,
+    "code": 205,
     "msg": "delete success"
 }
 ```
@@ -344,18 +350,19 @@ Users can update a contact information
 - Request Type: POST
 - Request Address: /contact/update/  
 - Request Fields:
-    - token: String
-    - contact_id: Integer, contact's ID
-    - name: String
-    - email: String
-    - birthday: Date
-    - company: String
-    - phone: String
-    - mobile: String
-    - address: String
-    - relationship: String
-    - notes: String
-    - image_address: String
+    - token: String, mandatory
+    - contact_id: Integer, contact's ID, mandatory
+    - with one of more of following parameter(s)
+      - name: String
+      - email: String
+      - birthday: Date
+      - company: String
+      - phone: String
+      - mobile: String
+      - address: String
+      - relationship: String
+      - notes: String
+      - image_address: String
 - Return Fields:
     - code: Integer
     - msg: String
@@ -380,14 +387,14 @@ Users can update a contact information
 ```
 # Wrong date format provided 
 {
-    "code": 0,
+    "code": 211,
     "msg": "['“2011-01-” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ] format.']"
 }
 ```
 ```
 # Successfully updated 
 {
-    "code": 0,
+    "code": 210,
     "msg": "updated"
 }
 ```

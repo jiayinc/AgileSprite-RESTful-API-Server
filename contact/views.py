@@ -15,10 +15,10 @@ class AddViewSet(APIView):
                                  "msg": "token authentication failed"})
 
         email = request.data.get('email')
-        name = request.data.get('name')
-        birthday = request.data.get('birthday')
+        first_name = request.data.get('name')
+        last_name = request.data.get('name')
         try:
-            Contact.objects.create(email=email, name=name, user_id=user_id, birthday=birthday)
+            Contact.objects.create(email=email, first_name=first_name, last_name=last_name, user_id=user_id)
         except Exception as e:
             return JsonResponse({"code": CONTACT_ADD_SUCCESS,
                                  "msg": str(e)})
@@ -90,19 +90,33 @@ class UpdateViewSet(APIView):
         relationship = request.data.get('relationship')
         notes = request.data.get('notes')
         image_address = request.data.get('image_address')
-        contact_id = request.data.get('contact_id')
-        contacts = Contact.objects.get(id=contact_id)
+        try:
+            contact_id = request.data.get('contact_id')
+            contacts = Contact.objects.get(id=contact_id)
+        except:
+            return JsonResponse({"code": CONTACT_ID_NOT_EXIST,
+                                 "msg": "contact ID does not exist"})
 
-        contacts.name = name
-        contacts.company = company
-        contacts.email = email
-        contacts.phone = phone
-        contacts.mobile = mobile
-        contacts.address = address
-        contacts.birthday = birthday
-        contacts.relationship = relationship
-        contacts.notes = notes
-        contacts.image_address = image_address
+        if name is not None:
+            contacts.name = name
+        if company is not None:
+            contacts.company = company
+        if email is not None:
+            contacts.email = email
+        if phone is not None:
+            contacts.phone = phone
+        if mobile is not None:
+            contacts.mobile = mobile
+        if address is not None:
+            contacts.address = address
+        if birthday is not None:
+            contacts.birthday = birthday
+        if relationship is not None:
+            contacts.relationship = relationship
+        if notes is not None:
+            contacts.notes = notes
+        if image_address is not None:
+            contacts.image_address = image_address
 
         try:
             contacts.save()
