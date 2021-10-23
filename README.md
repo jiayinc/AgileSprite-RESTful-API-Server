@@ -68,19 +68,34 @@ Users can create a new account
 ```
 - Sample Return:
 ```
-# Username exists
-{
-    "code": 106,
-    "msg": "UNIQUE constraint failed: account_extendeduser.username"
-}
-```
-```
 # Successfully created 
 {
     "code": 105,
     "msg": "create success"
 }
 ```
+```
+# Username exists
+{
+    "code": 106,
+    "msg": "This email address has been registered, a different email address is required for sign up."
+}
+```
+```
+# Invalid password
+{
+    "code": 107,
+    "msg": "Password must contains at least a digit, a letter, a upper case letter and a symbol, and length is between 8 and 30"
+}
+```
+```
+# Errors
+{
+    "code": 108,
+    "msg": "Unexpected errors occurred!"
+}
+```
+
 #### Login
 Users can sign in if they have registered before
 - Request Type: POST

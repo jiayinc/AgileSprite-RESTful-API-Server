@@ -26,7 +26,6 @@ class LogOutViewSet(APIView):
         # Token.objects.filter(key=token).delete()
 
 
-
 class UpdateViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
@@ -65,6 +64,14 @@ class UpdateViewSet(APIView):
                              "msg": "updated"})
 
 
+class InvalidPassword(Exception):
+    message = "Password must contains at least a digit, a letter, a upper case letter and a symbol, " \
+              "and length is between 8 and 30"
+
+    def __str__(self):
+        return self.message
+
+
 class RegisterViewSet(APIView):
 
     def validate_password(self, password):
@@ -73,22 +80,31 @@ class RegisterViewSet(APIView):
         if re.match(reg, password):
             return True
         else:
-            raise Exception("Password must contains at least a digit, a letter, a upper case letter and a symbol, "
-                            "and length is between 8 and 30")
+            raise InvalidPassword
 
     def post(self, request, *args, **kwargs):
         # username = request.data.get('username')
-        password = request.data.get('password')
         email = request.data.get('email')
+        password = request.data.get('password')
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
         try:
             self.validate_password(password)
             User.objects.create_user(username=email, password=password, email=email, first_name=first_name,
                                      last_name=last_name)
-        except Exception as e:
-            return JsonResponse({"code": ACCOUNT_REGISTER_FAIL,
+        except InvalidPassword as e:
+            return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
                                  "msg": str(e)})
+        except Exception as e:
+            if "account_extendeduser.username" in str(e):
+                return JsonResponse({"code": ACCOUNT_REGISTER_REPEAT_EMAIL,
+                                     "msg": "This email address has been registered, a different email address is "
+                                            "required for sign up."})
+            else:
+                # Other unexpected errors occurred
+                return JsonResponse({"code": ACCOUNT_REGISTER_ERROR,
+                                     "msg": "Unexpected errors occurred!"})
+
         return JsonResponse({"code": ACCOUNT_REGISTER_SUCCESS,
                              "msg": "create success"})
 
