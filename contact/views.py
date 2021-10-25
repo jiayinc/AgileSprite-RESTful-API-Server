@@ -15,8 +15,8 @@ class AddViewSet(APIView):
                                  "msg": "token authentication failed"})
 
         # email = request.data.get('email')
-        first_name = request.data.get('name')
-        last_name = request.data.get('name')
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
         try:
             Contact.objects.create(first_name=first_name, last_name=last_name, user_id=user_id)
         except Exception as e:
