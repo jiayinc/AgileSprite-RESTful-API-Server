@@ -71,14 +71,14 @@ Users can create a new account
 # Successfully created 
 {
     "code": 105,
-    "msg": "create success"
+    "msg": "Account created successfully! Let's go!"
 }
 ```
 ```
 # Username exists
 {
     "code": 106,
-    "msg": "This email address has been registered, a different email address is required for sign up."
+    "msg": "This email address is invalid or has been registered, a different email address is required."
 }
 ```
 ```
@@ -92,7 +92,7 @@ Users can create a new account
 # Errors
 {
     "code": 108,
-    "msg": "Unexpected errors occurred!"
+    "msg": "Unexpected errors occurred! Please refresh the page and try again!"
 }
 ```
 
@@ -116,18 +116,18 @@ Users can sign in if they have registered before
 ```
 - Sample Return:
 ```
-# Wrong login information
-{
-    "code": 101,
-    "msg": "wrong username/password"
-}
-```
-```
 # Successfully signed in 
 {
     "code": 100,
-    "msg": "login success",
+    "msg": "Login successfully! Let's go!",
     "token": "bb41305c3996ab47e4d729821b3c6232c003099d"
+}
+```
+```
+# Wrong login information
+{
+    "code": 101,
+    "msg": "Wrong username/password!"
 }
 ```
 #### Logout
@@ -150,12 +150,12 @@ Users can sign out if they have signed in
 # Successfully log out
 {
     "code": 115,
-    "msg": "log out performed, token was disabled"
+    "msg": "Log out performed, token was disabled."
 }
 # wrong token
 {
     "code": 120,
-    "msg": "token error"
+    "msg": "Error! Token authentication failed."
 }
 ```
 
@@ -184,7 +184,7 @@ Users can get their information
 ```
 {
     "code": 125,
-    "msg": "get success",
+    "msg": "User information was retrieved successfully.",
     "details": {
         "email": "123",
         "birthday": "2021-10-25T09:40:23.207Z",
@@ -232,28 +232,28 @@ Users can update their general information
 # Email update collision
 {
     "code": 110,
-    "msg": "This email address has been registered, a different email address is required."
+    "msg": "This email address is invalid or has been registered, a different email address is required."
 }
 ```
 ```
 # Successfully updated 
 {
     "code": 111,
-    "msg": "updated"
+    "msg": "User information was updated successfully."
 }
 ```
 ```
 # Unexpected error (Unused)
 {
     "code": 112
-    "msg": "Unexpected errors occurred!"
+    "msg": "Unexpected errors occurred! Please refresh the page and try again!"
 }
 ```
 ```
 # Invalid token
 {
     "code": 120,
-    "msg": "token error"
+    "msg": "Error! Token authentication failed."
 }
 ```
 
