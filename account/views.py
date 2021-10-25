@@ -8,6 +8,8 @@ from django.shortcuts import HttpResponse
 from rest_framework.authtoken.models import Token
 from django.contrib import auth
 from rest_framework.views import APIView
+
+from common.common import get_user_instance
 from .models import ExtendedUser as User
 from common.code import *
 
@@ -40,6 +42,22 @@ class LogOutViewSet(APIView):
                                  "msg": "token does not exist"})
         # Token.objects.filter(key=token).delete()
 
+class GetViewSet(APIView):
+
+    def post(self, request, *args, **kwargs):
+        user = get_user_instance(request)
+        if user is None:
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
+                                 "msg": "token authentication failed"})
+
+        return JsonResponse({"code": ACCOUNT_GET_SUCCESS,
+                             "msg": "get success",
+                             "details": {
+                                 'email': user.email,
+                                 'dob': user.date_of_birth,
+                                 'first_name': user.first_name,
+                                 'last_name': user.last_name,
+                             }})
 
 class UpdateViewSet(APIView):
 
@@ -67,7 +85,7 @@ class UpdateViewSet(APIView):
         if password is not None:
             try:
                 validate_password(password)
-                user_obj.password = password
+                user_obj.set_password(password)
             except InvalidPassword as e:
                 return JsonResponse({"code": ACCOUNT_UPDATE_PASSWORD_INVALID,
                                      "msg": str(e)})

@@ -9,7 +9,8 @@ urlpatterns = [
     # get all stories
     path('get_all', views.GetAllViewSet.as_view()),
     # add a story
-    path('add', views.GetAllViewSet.as_view()),
+    path('add', views.AddViewSet.as_view()),
     # delete a story
     path('delete', views.GetAllViewSet.as_view()),
 ]
+

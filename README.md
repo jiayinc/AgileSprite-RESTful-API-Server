@@ -158,6 +158,42 @@ Users can sign out if they have signed in
     "msg": "token error"
 }
 ```
+
+#### Get User Detail
+Users can get their information
+- Request Type: POST
+- Request Address: /account/get/  
+- Request Fields:
+    - token: String
+- Return Fields:
+    - code: Integer
+    - msg: String
+    - details:
+      - first name: String
+      - last name: String
+      - email: String
+      - dob: Date
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'contact_id': 2,
+}
+```
+- Sample Return:
+```
+{
+    "code": 125,
+    "msg": "get success",
+    "details": {
+        "email": "123",
+        "dob": "2021-10-25T09:40:23.207Z",
+        "first_name": "gg",
+        "last_name": "ww"
+    }
+}
+```
+
 #### Update Information (critical information included)
 Users can update their general information
 - Request Type: POST
@@ -435,5 +471,76 @@ Users can update a contact information
 {
     "code": 210,
     "msg": "updated"
+}
+```
+
+### Story
+#### Add a Story
+Users can add a contact's story
+- Request Type: POST
+- Request Address: /story/add/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer
+    - location: String
+    - date: Date
+    - content: String
+- Return Fields:
+    - code: Integer
+    - msg: String
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'location': 'mel',
+    'content': 'what???',
+    'date': 2020-01-21
+}
+```
+- Sample Return:
+```
+# Successfully added 
+{
+    "code": 400,
+    "msg": "add success"
+}
+```
+
+#### Get All Stories
+Users can get stories of a contact
+- Request Type: POST
+- Request Address: /story/get_all/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer
+- Return Fields:
+    - code: Integer
+    - msg: String
+    - contacts: List of Stories, where each story contains
+      - id: Integer, story's ID
+      - contact_id: Integer
+      - location: String
+      - date: Date
+      - content: String
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+}
+```
+- Sample Return:
+```
+{
+    "code": 405,
+    "msg": "get success",
+    "contacts": [
+        {
+            "id": 2,
+            "contact_id": 1,
+            "location": "mel",
+            "content": "what???",
+            "date": 2020-01-21
+        }
+    ]
 }
 ```

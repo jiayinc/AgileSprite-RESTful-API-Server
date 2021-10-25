@@ -14,16 +14,16 @@ class AddViewSet(APIView):
             return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
 
-        email = request.data.get('email')
+        # email = request.data.get('email')
         first_name = request.data.get('name')
         last_name = request.data.get('name')
         try:
-            Contact.objects.create(email=email, first_name=first_name, last_name=last_name, user_id=user_id)
+            Contact.objects.create(first_name=first_name, last_name=last_name, user_id=user_id)
         except Exception as e:
-            return JsonResponse({"code": CONTACT_ADD_SUCCESS,
+            return JsonResponse({"code": CONTACT_ADD_FAIL,
                                  "msg": str(e)})
 
-        return JsonResponse({"code": CONTACT_ADD_FAIL,
+        return JsonResponse({"code": CONTACT_ADD_SUCCESS,
                              "msg": "add success"})
 
 
