@@ -22,11 +22,31 @@ class InvalidPassword(Exception):
         return self.message
 
 
+class InvalidEmail(Exception):
+    message = "This email address is invalid or has been registered, a different email address is required."
+
+    def __str__(self):
+        return self.message
+
+
 def validate_password(password):
     import re
     reg = '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$'
-    if not re.match(reg, password):
+    if (password is None) or (not re.match(reg, password)):
         raise InvalidPassword
+
+
+# https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+def validate_email(email):
+    import re
+    # Make a regular expression
+    # for validating an Email
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+    # pass the regular expression
+    # and the string into the fullmatch() method
+    if (email is None) or (not re.fullmatch(regex, email)):
+        raise InvalidEmail
 
 
 class LogOutViewSet(APIView):
@@ -41,6 +61,7 @@ class LogOutViewSet(APIView):
             return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token does not exist"})
         # Token.objects.filter(key=token).delete()
+
 
 class GetViewSet(APIView):
 
@@ -58,6 +79,7 @@ class GetViewSet(APIView):
                                  'first_name': user.first_name,
                                  'last_name': user.last_name,
                              }})
+
 
 class UpdateViewSet(APIView):
 
@@ -89,16 +111,17 @@ class UpdateViewSet(APIView):
             except InvalidPassword as e:
                 return JsonResponse({"code": ACCOUNT_UPDATE_PASSWORD_INVALID,
                                      "msg": str(e)})
-        if email is not None:
-            user_obj.email = email
-            user_obj.username = email
         try:
+            if email is not None:
+                validate_email(email)
+
+                user_obj.email = email
+                user_obj.username = email
             user_obj.save()
         except Exception as e:
-            if "account_extendeduser.username" in str(e):
-                return JsonResponse({"code": ACCOUNT_UPDATE_REPEAT_EMAIL,
-                                     "msg": "This email address has been registered,"
-                                            " a different email address is required."})
+            if (type(e) == InvalidEmail) or ("account_extendeduser.username" in str(e)):
+                return JsonResponse({"code": ACCOUNT_UPDATE_EMAIL_INVALID,
+                                     "msg": InvalidEmail.message})
             else:
                 # Other unexpected errors occurred
                 return JsonResponse({"code": ACCOUNT_UPDATE_FAIL,
@@ -118,16 +141,16 @@ class RegisterViewSet(APIView):
         last_name = request.data.get('last_name')
         try:
             validate_password(password)
+            validate_email(email)
             User.objects.create_user(username=email, password=password, email=email, first_name=first_name,
                                      last_name=last_name)
         except InvalidPassword as e:
             return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
                                  "msg": str(e)})
         except Exception as e:
-            if "account_extendeduser.username" in str(e):
-                return JsonResponse({"code": ACCOUNT_REGISTER_REPEAT_EMAIL,
-                                     "msg": "This email address has been registered,"
-                                            " a different email address is required."})
+            if (type(e) == InvalidEmail) or ("account_extendeduser.username" in str(e)):
+                return JsonResponse({"code": ACCOUNT_REGISTER_EMAIL_INVALID,
+                                     "msg": InvalidEmail.message})
             else:
                 # Other unexpected errors occurred
                 return JsonResponse({"code": ACCOUNT_REGISTER_ERROR,
@@ -145,13 +168,15 @@ class LoginViewSet(APIView):
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
-        if email is None:
-            return JsonResponse({"code": ACCOUNT_LOGIN_EMPTY_EMAIL,
-                                 "msg": "email is empty"})
-
-        if password is None:
-            return JsonResponse({"code": ACCOUNT_LOGIN_EMPTY_PASSWORD,
-                                 "msg": "password is empty"})
+        try:
+            validate_email(email)
+            validate_password(password)
+        except InvalidEmail as e:
+            return JsonResponse({"code": ACCOUNT_LOGIN_EMAIL_INVALID,
+                                 "msg": InvalidEmail.message})
+        except InvalidPassword as e:
+            return JsonResponse({"code": ACCOUNT_LOGIN_PASSWORD_INVALID,
+                                 "msg": e.message})
 
         user = auth.authenticate(username=email, password=password)
         if not user:

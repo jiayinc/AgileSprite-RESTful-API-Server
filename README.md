@@ -243,7 +243,7 @@ Users can update their general information
 }
 ```
 ```
-# Unexpected error 
+# Unexpected error (Unused)
 {
     "code": 112
     "msg": "Unexpected errors occurred!"
