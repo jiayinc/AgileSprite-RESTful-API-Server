@@ -54,7 +54,7 @@ class GetViewSet(APIView):
                              "msg": "get success",
                              "details": {
                                  'email': user.email,
-                                 'dob': user.date_of_birth,
+                                 'birthday': user.date_of_birth,
                                  'first_name': user.first_name,
                                  'last_name': user.last_name,
                              }})
@@ -65,7 +65,7 @@ class UpdateViewSet(APIView):
         token = request.data.get('token')
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
-        dob = request.data.get('dob')
+        birthday = request.data.get('birthday')
         password = request.data.get('password')
         email = request.data.get('email')
 
@@ -80,8 +80,8 @@ class UpdateViewSet(APIView):
             user_obj.first_name = first_name
         if last_name is not None:
             user_obj.last_name = last_name
-        if dob is not None:
-            user_obj.date_of_birth = dob
+        if birthday is not None:
+            user_obj.date_of_birth = birthday
         if password is not None:
             try:
                 validate_password(password)

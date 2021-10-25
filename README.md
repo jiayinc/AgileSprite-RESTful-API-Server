@@ -172,7 +172,7 @@ Users can get their information
       - first name: String
       - last name: String
       - email: String
-      - dob: Date
+      - birthday: Date
 - Sample Request:
 ```
 {
@@ -187,7 +187,7 @@ Users can get their information
     "msg": "get success",
     "details": {
         "email": "123",
-        "dob": "2021-10-25T09:40:23.207Z",
+        "birthday": "2021-10-25T09:40:23.207Z",
         "first_name": "gg",
         "last_name": "ww"
     }
@@ -201,7 +201,7 @@ Users can update their general information
 - Request Fields:
     - token: String, mandatory
     - with one of more of following parameter(s)
-      - dob: Date
+      - birthday: Date
       - first_name: String
       - last_name: String
       - password: String
@@ -215,7 +215,7 @@ Users can update their general information
     'token': 'a8313daaf222e91d76dacd5ae4986b7f52b3c7d8',
     'first_name': '321',
     'last_name': '3333',
-    'dob': '2011-01-02'
+    'birthday': '2011-01-02'
 }
 ```
 - Sample Return:
