@@ -7,7 +7,7 @@ from django.db import models
 class Contact(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.IntegerField()
-    fist_name = models.CharField(max_length=32, default="null")
+    first_name = models.CharField(max_length=32, default="null")
     last_name = models.CharField(max_length=32, default="null")
     company = models.CharField(max_length=32, default="null")
     email = models.CharField(max_length=32, default="null")
