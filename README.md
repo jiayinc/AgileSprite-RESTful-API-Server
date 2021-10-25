@@ -183,20 +183,44 @@ Users can update their general information
 }
 ```
 - Sample Return:
+
 ```
-# Wrong date format provided 
+# Invalid password update attempt
 {
-    "code": 111,
-    "msg": "['“2011-01-” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ] format.']"
+    "code": 109,
+    "msg": "Password must contains at least a digit, a letter, a upper case letter and a symbol, and length is between 8 and 30"
+}
+```
+
+```
+# Email update collision
+{
+    "code": 110,
+    "msg": "This email address has been registered, a different email address is required."
 }
 ```
 ```
 # Successfully updated 
 {
-    "code": 110,
+    "code": 111,
     "msg": "updated"
 }
 ```
+```
+# Unexpected error 
+{
+    "code": 112
+    "msg": "Unexpected errors occurred!"
+}
+```
+```
+# Invalid token
+{
+    "code": 120,
+    "msg": "token error"
+}
+```
+
 
 ### Contact
 Contact feature
