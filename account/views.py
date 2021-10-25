@@ -12,6 +12,21 @@ from .models import ExtendedUser as User
 from common.code import *
 
 
+class InvalidPassword(Exception):
+    message = "Password must contains at least a digit, a letter, a upper case letter and a symbol, " \
+              "and length is between 8 and 30"
+
+    def __str__(self):
+        return self.message
+
+
+def validate_password(password):
+    import re
+    reg = '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$'
+    if not re.match(reg, password):
+        raise InvalidPassword
+
+
 class LogOutViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
@@ -50,7 +65,12 @@ class UpdateViewSet(APIView):
         if dob is not None:
             user_obj.date_of_birth = dob
         if password is not None:
-            user_obj.password = password
+            try:
+                validate_password(password)
+                user_obj.password = password
+            except InvalidPassword as e:
+                return JsonResponse({"code": ACCOUNT_UPDATE_FAIL,
+                                     "msg": str(e)})
         if email is not None:
             user_obj.email = email
             user_obj.username = email
@@ -64,23 +84,7 @@ class UpdateViewSet(APIView):
                              "msg": "updated"})
 
 
-class InvalidPassword(Exception):
-    message = "Password must contains at least a digit, a letter, a upper case letter and a symbol, " \
-              "and length is between 8 and 30"
-
-    def __str__(self):
-        return self.message
-
-
 class RegisterViewSet(APIView):
-
-    def validate_password(self, password):
-        import re
-        reg = '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$'
-        if re.match(reg, password):
-            return True
-        else:
-            raise InvalidPassword
 
     def post(self, request, *args, **kwargs):
         # username = request.data.get('username')
@@ -89,7 +93,7 @@ class RegisterViewSet(APIView):
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
         try:
-            self.validate_password(password)
+            validate_password(password)
             User.objects.create_user(username=email, password=password, email=email, first_name=first_name,
                                      last_name=last_name)
         except InvalidPassword as e:
