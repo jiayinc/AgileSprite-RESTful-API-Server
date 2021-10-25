@@ -1,29 +1,25 @@
-from django.shortcuts import render
-
 # Create your views here.
 
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.shortcuts import HttpResponse
-from rest_framework.authtoken.models import Token
 from django.contrib import auth
+from django.http import JsonResponse
+from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 
-from common.common import get_user_instance
-from .models import ExtendedUser as User
 from common.code import *
+from common.common import get_user_instance
+from common.returnMsg import *
+from .models import ExtendedUser as User
 
 
 class InvalidPassword(Exception):
-    message = "Password must contains at least a digit, a letter, a upper case letter and a symbol, " \
-              "and length is between 8 and 30"
+    message = MSG_INVALID_PASSWORD
 
     def __str__(self):
         return self.message
 
 
 class InvalidEmail(Exception):
-    message = "This email address is invalid or has been registered, a different email address is required."
+    message = MSG_INVALID_EMAIL
 
     def __str__(self):
         return self.message
@@ -56,10 +52,10 @@ class LogOutViewSet(APIView):
         try:
             Token.objects.get(key=token).delete()
             return JsonResponse({"code": ACCOUNT_LOGOUT_SUCCESS,
-                                 "msg": "log out performed, token was disabled"})
+                                 "msg": MSG_ACCOUNT_LOGOUT_SUCCESS})
         except:
             return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
-                                 "msg": "token does not exist"})
+                                 "msg": MSG_ACCOUNT_TOKEN_ERROR})
         # Token.objects.filter(key=token).delete()
 
 
@@ -69,10 +65,10 @@ class GetViewSet(APIView):
         user = get_user_instance(request)
         if user is None:
             return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
-                                 "msg": "token authentication failed"})
+                                 "msg": MSG_ACCOUNT_TOKEN_ERROR})
 
         return JsonResponse({"code": ACCOUNT_GET_SUCCESS,
-                             "msg": "get success",
+                             "msg": MSG_ACCOUNT_GET_SUCCESS,
                              "details": {
                                  'email': user.email,
                                  'birthday': user.date_of_birth,
@@ -95,7 +91,7 @@ class UpdateViewSet(APIView):
             user_id = Token.objects.get(key=token).user_id
         except:
             return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
-                                 "msg": "token error"})
+                                 "msg": MSG_ACCOUNT_TOKEN_ERROR})
         user_obj = User.objects.get(id=user_id)
 
         if first_name is not None:
@@ -110,7 +106,7 @@ class UpdateViewSet(APIView):
                 user_obj.set_password(password)
             except InvalidPassword as e:
                 return JsonResponse({"code": ACCOUNT_UPDATE_PASSWORD_INVALID,
-                                     "msg": str(e)})
+                                     "msg": MSG_ACCOUNT_UPDATE_PASSWORD_INVALID})
         try:
             if email is not None:
                 validate_email(email)
@@ -121,20 +117,19 @@ class UpdateViewSet(APIView):
         except Exception as e:
             if (type(e) == InvalidEmail) or ("account_extendeduser.username" in str(e)):
                 return JsonResponse({"code": ACCOUNT_UPDATE_EMAIL_INVALID,
-                                     "msg": InvalidEmail.message})
+                                     "msg": MSG_ACCOUNT_UPDATE_EMAIL_INVALID})
             else:
                 # Other unexpected errors occurred
                 return JsonResponse({"code": ACCOUNT_UPDATE_FAIL,
-                                     "msg": "Unexpected errors occurred!"})
+                                     "msg": MSG_ACCOUNT_UPDATE_FAIL})
 
         return JsonResponse({"code": ACCOUNT_UPDATE_SUCCESS,
-                             "msg": "updated"})
+                             "msg": MSG_ACCOUNT_UPDATE_SUCCESS})
 
 
 class RegisterViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
-        # username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
         first_name = request.data.get('first_name')
@@ -146,18 +141,18 @@ class RegisterViewSet(APIView):
                                      last_name=last_name)
         except InvalidPassword as e:
             return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
-                                 "msg": str(e)})
+                                 "msg": MSG_ACCOUNT_REGISTER_PASSWORD_INVALID})
         except Exception as e:
             if (type(e) == InvalidEmail) or ("account_extendeduser.username" in str(e)):
                 return JsonResponse({"code": ACCOUNT_REGISTER_EMAIL_INVALID,
-                                     "msg": InvalidEmail.message})
+                                     "msg": MSG_ACCOUNT_REGISTER_EMAIL_INVALID})
             else:
                 # Other unexpected errors occurred
                 return JsonResponse({"code": ACCOUNT_REGISTER_ERROR,
-                                     "msg": "Unexpected errors occurred!"})
+                                     "msg": MSG_ACCOUNT_REGISTER_ERROR})
 
         return JsonResponse({"code": ACCOUNT_REGISTER_SUCCESS,
-                             "msg": "create success"})
+                             "msg": MSG_ACCOUNT_REGISTER_SUCCESS})
 
 
 class LoginViewSet(APIView):
@@ -171,18 +166,18 @@ class LoginViewSet(APIView):
         try:
             validate_email(email)
             validate_password(password)
-        except InvalidEmail as e:
+        except InvalidEmail:
             return JsonResponse({"code": ACCOUNT_LOGIN_EMAIL_INVALID,
-                                 "msg": InvalidEmail.message})
-        except InvalidPassword as e:
+                                 "msg": MSG_ACCOUNT_LOGIN_EMAIL_INVALID})
+        except InvalidPassword:
             return JsonResponse({"code": ACCOUNT_LOGIN_PASSWORD_INVALID,
-                                 "msg": e.message})
+                                 "msg": MSG_ACCOUNT_LOGIN_PASSWORD_INVALID})
 
         user = auth.authenticate(username=email, password=password)
         if not user:
             return JsonResponse({"code": ACCOUNT_LOGIN_FAIL,
-                                 "msg": "wrong email/password"})
+                                 "msg": MSG_ACCOUNT_LOGIN_FAIL})
         Token.objects.filter(user=user).delete()
         return JsonResponse({"code": ACCOUNT_LOGIN_SUCCESS,
-                             "msg": "login success",
+                             "msg": MSG_ACCOUNT_LOGIN_SUCCESS,
                              "token": Token.objects.create(user=user).key})
