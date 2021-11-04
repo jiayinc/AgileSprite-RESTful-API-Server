@@ -92,7 +92,7 @@ class UpdateViewSet(APIView):
         image_address = request.data.get('image_address')
         try:
             contact_id = request.data.get('contact_id')
-            contacts = Contact.objects.get(id=contact_id)
+            contacts = Contact.objects.get(id=contact_id, user_id=user_id)
         except:
             return JsonResponse({"code": CONTACT_ID_NOT_EXIST,
                                  "msg": "contact ID does not exist"})
