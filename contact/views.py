@@ -24,11 +24,36 @@ class AddViewSet(APIView):
             return JsonResponse({"code": CONTACT_ADD_FAIL,
                                  "msg": str(e)})
 
+        company = request.data.get('company')
+        email = request.data.get('email')
+        phone = request.data.get('phone')
+        mobile = request.data.get('mobile')
+        address = request.data.get('address')
+        birthday = request.data.get('birthday')
+        relationship = request.data.get('relationship')
+        notes = request.data.get('notes')
+        image_address = request.data.get('image_address')
+
+        is_not_empty = lambda x: x is not None and len(x) != 0
+
+        contact.company = company if is_not_empty(company) else ''
+        contact.email = email if is_not_empty(email) else ''
+        contact.phone = phone if is_not_empty(email) else ''
+        contact.mobile = mobile if is_not_empty(email) else ''
+        contact.address = address if is_not_empty(email) else ''
+        contact.birthday = birthday if is_not_empty(email) else ''
+        contact.relationship = relationship if is_not_empty(email) else ''
+        contact.notes = notes if is_not_empty(email) else ''
+        contact.image_address = image_address if is_not_empty(email) else 'https://i.pravatar.cc/150?u=' + first_name + last_name
+        try:
+            contact.save()
+        except Exception as e:
+            return JsonResponse({"code": CONTACT_ADD_FAIL,
+                                 "msg": str(e)})
+
         return JsonResponse({"code": CONTACT_ADD_SUCCESS,
-                             "msg": "add success",
-                             'details': {
-                                 'contact_id': contact.id
-                             }})
+                             "msg": "add success"
+                             })
 
 
 class GetAllViewSet(APIView):
@@ -84,7 +109,7 @@ class UpdateViewSet(APIView):
             return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
 
-        name = request.data.get('name')
+        # name = request.data.get('name')
         company = request.data.get('company')
         email = request.data.get('email')
         phone = request.data.get('phone')
@@ -101,8 +126,8 @@ class UpdateViewSet(APIView):
             return JsonResponse({"code": CONTACT_ID_NOT_EXIST,
                                  "msg": "contact ID does not exist"})
 
-        if name is not None:
-            contacts.name = name
+        # if name is not None:
+        #     contacts.name = name
         if company is not None:
             contacts.company = company
         if email is not None:
