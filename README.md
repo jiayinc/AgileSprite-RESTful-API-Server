@@ -266,9 +266,8 @@ Users can add a contact
 - Request Address: /contact/add/  
 - Request Fields:
     - token: String
-    - email: String
-    - birthday: Date
-    - name: String
+    - first_name: String
+    - last_name: String
 - Return Fields:
     - code: Integer
     - msg: String
@@ -278,9 +277,8 @@ Users can add a contact
 ```
 {
     'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
-    'name': 'gg',
-    'email': 'asd@qq.com',
-    'birthday': 2020-01-21
+    'first_name': 'gg',
+    'last_name': 'uu',
 }
 ```
 - Sample Return:
@@ -531,6 +529,7 @@ Users can get stories of a contact
 ```
 {
     'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'contact_id': 5
 }
 ```
 - Sample Return:
@@ -547,5 +546,118 @@ Users can get stories of a contact
             "date": 2020-01-21
         }
     ]
+}
+```
+
+#### Get A Story
+Users can get a story of a contact
+- Request Type: POST
+- Request Address: /story/get/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer
+    - story_id: Integer
+- Return Fields:
+    - code: Integer
+    - msg: String
+    - contacts: List of Stories, where each story contains
+      - id: Integer, story's ID
+      - contact_id: Integer
+      - location: String
+      - date: Date
+      - content: String
+- Sample Request:
+```
+{
+    'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'contact_id': 5,
+    'story_id': 6
+}
+```
+- Sample Return:
+```
+{
+    "code": 410,
+    "msg": "get success",
+    "contacts": [
+        {
+            "id": 2,
+            "contact_id": 1,
+            "location": "mel",
+            "content": "what???",
+            "date": 2020-01-21
+        }
+    ]
+}
+```
+
+#### Update Story Information
+Users can update a contact's story information
+- Request Type: POST
+- Request Address: /story/update/  
+- Request Fields:
+    - token: String, mandatory
+    - contact_id: Integer, contact's ID, mandatory
+    - story_id: Integer, story's ID, mandatory
+    - with one of more of following parameter(s)
+      - location: String
+      - date: String
+      - content: Date
+- Return Fields:
+    - code: Integer
+    - msg: String
+- Sample Request:
+```
+{
+    'token': '3b6a7f2885ecbaec38261c2cdf7be0b1263029f7',
+    'contact_id': 2,
+    'story_id': 5,
+    'company': 'abc.co',
+    'location': 'Melbourne',
+    'date': 1999-08-01,
+    'content': 'None',
+}
+```
+- Sample Return:
+```
+# Wrong date format provided 
+{
+    "code": 416,
+    "msg": "['“2011-01-” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ] format.']"
+}
+```
+```
+# Successfully updated 
+{
+    "code": 415,
+    "msg": "updated"
+}
+```
+
+#### Delete a Story
+Users can delete a story
+- Request Type: POST
+- Request Address: /story/delete/  
+- Request Fields:
+    - token: String
+    - contact_id: Integer
+    - story_id: Integer
+- Return Fields:
+    - code: Integer
+    - msg: String
+- Sample Request:
+```
+{
+    'token': 'de99673b5ca9832e5a4f616c8ec81f563f4e0d84',
+    'contact_id': 2,
+    'story_id': 3
+}
+```
+- Sample Return:
+```
+# Successfully deleted
+{
+    "code": 425,
+    "msg": "delete success"
 }
 ```
