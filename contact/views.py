@@ -41,10 +41,10 @@ class AddViewSet(APIView):
         contact.phone = phone if is_not_empty(email) else ''
         contact.mobile = mobile if is_not_empty(email) else ''
         contact.address = address if is_not_empty(email) else ''
-        contact.birthday = birthday if is_not_empty(email) else ''
+        contact.birthday = birthday if is_not_empty(email) else '1970-01-01'
         contact.relationship = relationship if is_not_empty(email) else ''
         contact.notes = notes if is_not_empty(email) else ''
-        contact.image_address = image_address if is_not_empty(email) else 'https://i.pravatar.cc/150?u=' + first_name + last_name
+        contact.image_address = image_address if is_not_empty(email) else ("https://i.pravatar.cc/150?u=" + first_name + last_name)
         try:
             contact.save()
         except Exception as e:
