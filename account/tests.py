@@ -13,135 +13,116 @@ class AccountCreateTests(APITestCase):
     def setUp(self):
         self.url = reverse('account-register')
 
+    def tearDown(self):
+        response = self.client.post(self.url, self.data, format='json')
+        content = json.loads(response.content)
+        self.assertEqual(content['code'], self.code)
+
     def test_wrong_1(self):
         # no password field
-        data = {
+        self.data = {
             'random': '123'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_PASSWORD_INVALID)
+        self.code = ACCOUNT_REGISTER_PASSWORD_INVALID
 
     def test_wrong_2(self):
         # no lowercase
-        data = {
+        self.data = {
             'password': '123456ASD'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_PASSWORD_INVALID)
+        self.code = ACCOUNT_REGISTER_PASSWORD_INVALID
 
     def test_wrong_3(self):
         # no uppercase
-        data = {
+        self.data = {
             'password': '123456ab'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_PASSWORD_INVALID)
+        self.code = ACCOUNT_REGISTER_PASSWORD_INVALID
 
     def test_wrong_4(self):
         # long password
-        data = {
+        self.data = {
             'password': '123ASDab123ASDab123ASDab123ASDab123ASDab123ASDab123ASDab123ASDab123ASDab',
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_PASSWORD_INVALID)
+        self.code = ACCOUNT_REGISTER_PASSWORD_INVALID
 
     def test_wrong_5(self):
         # correct password, but no email field
-        data = {
+        self.data = {
             'password': '123ASDab123A',
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_EMAIL_INVALID)
+        self.code = ACCOUNT_REGISTER_EMAIL_INVALID
 
     def test_wrong_6(self):
         # correct password
         # email wrong format
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abxxxc'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_EMAIL_INVALID)
+        self.code = ACCOUNT_REGISTER_EMAIL_INVALID
 
     def test_wrong_7(self):
         # correct password
         # email wrong format
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abc@'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_EMAIL_INVALID)
+        self.code = ACCOUNT_REGISTER_EMAIL_INVALID
 
     def test_wrong_8(self):
         # correct password
         # email wrong format
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abc@qq'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_EMAIL_INVALID)
+        self.code = ACCOUNT_REGISTER_EMAIL_INVALID
 
     def test_wrong_9(self):
         # correct password
         # correct email
         # no names
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abc@qq11.com'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_ERROR)
+        self.code = ACCOUNT_REGISTER_ERROR
 
     def test_wrong_10(self):
         # correct password
         # correct email
         # no last name
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abc@qq11.com',
             'first_name': 'test'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_ERROR)
+        self.code = ACCOUNT_REGISTER_ERROR
 
     def test_wrong_11(self):
         # correct password
         # correct email
         # no first name
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abc@qq11.com',
             'last_name': 'gg'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_ERROR)
+        self.code = ACCOUNT_REGISTER_ERROR
 
     def test_correct_1(self):
         # correct password
         # correct email
         # correct name
-        data = {
+        self.data = {
             'password': '123ASDab123A',
             'email': 'abc@qq11.com',
             'first_name': 'test',
             'last_name': 'gg'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_REGISTER_SUCCESS)
+        self.code = ACCOUNT_REGISTER_SUCCESS
 
 
 class AccountLoginTests(APITestCase):
@@ -156,53 +137,49 @@ class AccountLoginTests(APITestCase):
         # self.client = APIClient()
         # self.client.force_authenticate(self.user)
 
+    def tearDown(self):
+        response = self.client.post(self.url, self.data, format='json')
+        content = json.loads(response.content)
+        self.assertEqual(content['code'], self.code)
+
     def test_wrong_1(self):
         # no login details
-        data = {
+        self.data = {
             'random': '123'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_LOGIN_EMAIL_INVALID)
+        self.code = ACCOUNT_LOGIN_EMAIL_INVALID
 
     def test_wrong_2(self):
         # no password
-        data = {
+        self.data = {
             'email': 'email@email.co'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_LOGIN_PASSWORD_INVALID)
+        self.code = ACCOUNT_LOGIN_PASSWORD_INVALID
 
     def test_wrong_3(self):
         # email wrong
-        data = {
+        self.data = {
             'email': 'email@email.co',
             'password': 'passwordASD123'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_LOGIN_FAIL)
+        self.code = ACCOUNT_LOGIN_FAIL
 
     def test_wrong_4(self):
         # password wrong
-        data = {
+        self.data = {
             'email': 'email@email.com',
             'password': 'passwordASD'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_LOGIN_PASSWORD_INVALID)
+        self.code = ACCOUNT_LOGIN_PASSWORD_INVALID
 
     def test_correct_1(self):
         # correct credentials
-        data = {
+        self.data = {
             'email': 'email@email.com',
             'password': 'passwordASD123'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_LOGIN_SUCCESS)
+        self.code = ACCOUNT_LOGIN_SUCCESS
+
 
 class AccountLogoutTests(APITestCase):
 
@@ -221,29 +198,76 @@ class AccountLogoutTests(APITestCase):
         content = json.loads(response.content)
         self.token = content['token']
 
+    def tearDown(self):
+        response = self.client.post(self.url, self.data, format='json')
+        content = json.loads(response.content)
+        self.assertEqual(content['code'], self.code)
+
     def test_wrong_1(self):
         # no token
-        data = {
+        self.data = {
             'random': '123'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_TOKEN_ERROR)
+        self.code = ACCOUNT_TOKEN_ERROR
 
     def test_wrong_2(self):
         # wrong token
-        data = {
+        self.data = {
             'token': '123'
         }
-        response = self.client.post(self.url, data, format='json')
-        content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_TOKEN_ERROR)
+        self.code = ACCOUNT_TOKEN_ERROR
 
     def test_correct_1(self):
-        # wrong token
-        data = {
+        # correct token
+        self.data = {
             'token': self.token
         }
-        response = self.client.post(self.url, data, format='json')
+        self.code = ACCOUNT_LOGOUT_SUCCESS
+
+
+class AccountGetTests(APITestCase):
+
+    def setUp(self):
+        self.url = reverse('account-get')
+        self.user = User.objects.create_user(username='email@email.com',
+                                             password='passwordASD123',
+                                             email='email@email.com',
+                                             first_name='first',
+                                             last_name='last')
+        data = {
+            'email': 'email@email.com',
+            'password': 'passwordASD123'
+        }
+        response = self.client.post(reverse('account-login'), data, format='json')
         content = json.loads(response.content)
-        self.assertEqual(content['code'], ACCOUNT_LOGOUT_SUCCESS)
+        self.token = content['token']
+
+        self.first_name = None
+        self.last_name = None
+
+    def tearDown(self):
+        response = self.client.post(self.url, self.data, format='json')
+        content = json.loads(response.content)
+        self.assertEqual(content['code'], self.code)
+        if self.first_name:
+            self.assertEqual(content['details']['first_name'], self.first_name)
+            self.first_name = None
+        if self.last_name:
+            self.assertEqual(content['details']['last_name'], self.last_name)
+            self.last_name = None
+
+    def test_correct_1(self):
+        # correct token
+        self.data = {
+            'token': self.token
+        }
+        self.code = ACCOUNT_GET_SUCCESS
+        self.first_name = 'first'
+        self.last_name = 'last'
+
+    def test_wrong_1(self):
+        # wrong token
+        self.data = {
+            'token': 'abc'
+        }
+        self.code = ACCOUNT_TOKEN_ERROR
