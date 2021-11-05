@@ -6,6 +6,7 @@ from .models import Contact
 from common.common import get_user_id
 from common.code import *
 
+
 class AddViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
@@ -112,7 +113,7 @@ class UpdateViewSet(APIView):
             contacts.mobile = mobile
         if address is not None:
             contacts.address = address
-        if birthday is not None:
+        if birthday is not None and len(birthday) != 0:
             contacts.birthday = birthday
         if relationship is not None:
             contacts.relationship = relationship
