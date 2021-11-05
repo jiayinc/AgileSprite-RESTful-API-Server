@@ -1,12 +1,8 @@
 import json
-
 from django.urls import reverse
-from rest_framework import status
 from common.code import *
 from .models import ExtendedUser as User
-from django.test import TestCase
-from rest_framework.authtoken.models import Token
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APITestCase
 
 
 class AccountCreateTests(APITestCase):
