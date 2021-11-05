@@ -18,13 +18,16 @@ class AddViewSet(APIView):
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
         try:
-            Contact.objects.create(first_name=first_name, last_name=last_name, user_id=user_id)
+            contact = Contact.objects.create(first_name=first_name, last_name=last_name, user_id=user_id)
         except Exception as e:
             return JsonResponse({"code": CONTACT_ADD_FAIL,
                                  "msg": str(e)})
 
         return JsonResponse({"code": CONTACT_ADD_SUCCESS,
-                             "msg": "add success"})
+                             "msg": "add success",
+                             'details': {
+                                 'contact_id': contact.id
+                             }})
 
 
 class GetAllViewSet(APIView):

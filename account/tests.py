@@ -242,19 +242,14 @@ class AccountGetTests(APITestCase):
         content = json.loads(response.content)
         self.token = content['token']
 
-        self.first_name = None
-        self.last_name = None
-
     def tearDown(self):
         response = self.client.post(self.url, self.data, format='json')
         content = json.loads(response.content)
         self.assertEqual(content['code'], self.code)
-        if self.first_name:
-            self.assertEqual(content['details']['first_name'], self.first_name)
-            self.first_name = None
-        if self.last_name:
-            self.assertEqual(content['details']['last_name'], self.last_name)
-            self.last_name = None
+        if self.code == ACCOUNT_GET_SUCCESS:
+            self.assertEqual(content['details']['first_name'], self.user.first_name)
+            self.assertEqual(content['details']['last_name'], self.user.last_name)
+            self.assertEqual(content['details']['email'], self.user.email)
 
     def test_correct_1(self):
         # correct token
@@ -262,8 +257,6 @@ class AccountGetTests(APITestCase):
             'token': self.token
         }
         self.code = ACCOUNT_GET_SUCCESS
-        self.first_name = 'first'
-        self.last_name = 'last'
 
     def test_wrong_1(self):
         # wrong token
@@ -271,3 +264,167 @@ class AccountGetTests(APITestCase):
             'token': 'abc'
         }
         self.code = ACCOUNT_TOKEN_ERROR
+
+
+class AccountUpdateTests(APITestCase):
+
+    # no content validation still
+
+    def setUp(self):
+        self.url = reverse('account-update')
+        self.user = User.objects.create_user(username='email@email.com',
+                                             password='passwordASD123',
+                                             email='email@email.com',
+                                             first_name='first',
+                                             last_name='last')
+        data = {
+            'email': self.user.email,
+            'password': 'passwordASD123'
+        }
+        response = self.client.post(reverse('account-login'), data, format='json')
+        content = json.loads(response.content)
+        self.token = content['token']
+        self.new_email = None
+        self.new_first_name = None
+        self.new_last_name = None
+
+    def tearDown(self):
+        response = self.client.post(self.url, self.data, format='json')
+        content = json.loads(response.content)
+        self.assertEqual(content['code'], self.code)
+        if self.code == ACCOUNT_UPDATE_SUCCESS:
+            if self.new_email:
+                self.user_test = User.objects.get(username=self.new_email)
+            else:
+                self.user_test = User.objects.get(username=self.user.email)
+
+            if self.new_first_name:
+                self.assertEqual(self.new_first_name, self.user_test.first_name)
+
+            if self.new_last_name:
+                self.assertEqual(self.new_last_name, self.user_test.last_name)
+
+    def test_wrong_1(self):
+        # wrong token
+        # nothing to update
+        self.data = {
+            'token': 'abc'
+        }
+        self.code = ACCOUNT_TOKEN_ERROR
+
+    def test_wrong_2(self):
+        # wrong token
+        # nothing to update
+        self.data = {
+            'token': 'abc',
+            'first_name': 'name'
+        }
+        self.code = ACCOUNT_TOKEN_ERROR
+
+    def test_correct_1(self):
+        # correct token
+        # nothing to update
+        self.data = {
+            'token': self.token
+        }
+        self.code = ACCOUNT_UPDATE_SUCCESS
+
+    def test_correct_2(self):
+        # correct token
+        # update all
+        self.new_first_name = 'a'
+        self.new_last_name = 'b'
+        self.new_email = 'email@qq.com'
+        self.data = {
+            'token': self.token,
+            'first_name': self.new_first_name,
+            'last_name': self.new_last_name,
+            'email': self.new_email,
+        }
+        self.code = ACCOUNT_UPDATE_SUCCESS
+
+    def test_wrong_3(self):
+        # correct token
+        # wrong email format
+        self.data = {
+            'token': self.token,
+            'email': 'email',
+        }
+        self.code = ACCOUNT_UPDATE_EMAIL_INVALID
+
+    def test_wrong_4(self):
+        # correct token
+        # wrong email format
+        self.data = {
+            'token': self.token,
+            'email': 'email@qx',
+        }
+        self.code = ACCOUNT_UPDATE_EMAIL_INVALID
+
+    def test_wrong_5(self):
+        # correct token
+        # wrong email format
+        self.data = {
+            'token': self.token,
+            'email': 'email@.com',
+        }
+        self.code = ACCOUNT_UPDATE_EMAIL_INVALID
+
+    def test_wrong_6(self):
+        # correct token
+        # wrong password format
+        self.data = {
+            'token': self.token,
+            'password': 'abc',
+        }
+        self.code = ACCOUNT_UPDATE_PASSWORD_INVALID
+
+    def test_wrong_7(self):
+        # correct token
+        # wrong password format
+        self.data = {
+            'token': self.token,
+            'password': 'abcABC1',
+        }
+        self.code = ACCOUNT_UPDATE_PASSWORD_INVALID
+
+    def test_wrong_8(self):
+        # correct token
+        # wrong password format
+        self.data = {
+            'token': self.token,
+            'password': 'abcd1234',
+        }
+        self.code = ACCOUNT_UPDATE_PASSWORD_INVALID
+
+    def test_wrong_9(self):
+        # correct token
+        # wrong password format
+        self.data = {
+            'token': self.token,
+            'password': 'abcd123abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234ab4',
+        }
+        self.code = ACCOUNT_UPDATE_PASSWORD_INVALID
+
+    def test_correct_3(self):
+        # correct token
+        # correct password format
+        self.data = {
+            'token': self.token,
+            'password': 'abcABC123',
+        }
+        self.code = ACCOUNT_UPDATE_SUCCESS
+
+    def test_wrong_10(self):
+        # correct token
+        # email exists
+        self.data = {
+            'token': self.token,
+            'email': 'email@exist.com',
+        }
+        User.objects.create_user(username='email@exist.com',
+                                 password='passwordASD123',
+                                 email='email@exist.com',
+                                 first_name='first',
+                                 last_name='last')
+        self.code = ACCOUNT_UPDATE_EMAIL_INVALID

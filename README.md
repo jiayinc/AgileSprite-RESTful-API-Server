@@ -272,6 +272,8 @@ Users can add a contact
 - Return Fields:
     - code: Integer
     - msg: String
+    - details:
+      - contact_id: Integer
 - Sample Request:
 ```
 {
@@ -287,6 +289,9 @@ Users can add a contact
 {
     "code": 200,
     "msg": "add success"
+    "details":{
+        "contact_id": 1
+    }
 }
 ```
 
