@@ -249,7 +249,7 @@ class ForgotPasswordViewSet(APIView):
         iterations = 4
         for i in range(iterations):
             pwd.append(lower[random.randint(0, len(lower)-1)])
-            pwd.append(lower[random.randint(0, len(upper)-1)])
+            pwd.append(upper[random.randint(0, len(upper)-1)])
             pwd.append(str(random.randint(0, 9)))
         random.shuffle(pwd)
         return "".join(pwd)
