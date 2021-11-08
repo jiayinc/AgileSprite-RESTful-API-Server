@@ -8,20 +8,15 @@ from rest_framework.authtoken.models import Token
 from django.contrib import auth
 from rest_framework.views import APIView
 from contact.models import Contact
+from mycalendar.models import Event
+from common.common import get_user_id
 from common.code import *
 
-def token_authentication(request):
-    token = request.data.get('token')
-    try:
-        user_id = Token.objects.get(key=token).user_id
-        return user_id
-    except:
-        return None
 
 class ReminderBirthdayViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
-        user_id = token_authentication(request)
+        user_id = get_user_id(request)
         if user_id is None:
             return JsonResponse({"code":0,
                                  "msg": "token authentication failed"})
@@ -31,13 +26,12 @@ class ReminderBirthdayViewSet(APIView):
             contact_list = Contact.objects.filter(user_id=user_id, birthday=date)
         except Exception as e:
             return JsonResponse({"code":REMINDER_BIRTDAY_ERROR, "msg":"reminder birthday error"})
-        return JsonResponse({"code":REMINDER_BIRTDAY_SUCCESS, "msg":contact_list})
-
+        return JsonResponse({"code":REMINDER_BIRTDAY_SUCCESS, "objects":contact_list})
 
 
 class ViewStoryPhotoViewSet(APIView):
     def post(self, request, *args, **kwargs):
-        user_id = token_authentication(request)
+        user_id = get_user_id(request)
         if user_id is None:
             return JsonResponse({"code":0,
                                  "msg": "token authentication failed"})
@@ -48,4 +42,78 @@ class ViewStoryPhotoViewSet(APIView):
             story_list = Story.objects.filter(contact_id=contact_id, date=date)
         except Exception as e:
             return JsonResponse({"code":VIEW_STORY_PHOTO_ERROR, "msg":"view story photo error"})
-        return JsonResponse({"code":VIEW_STORY_PHOTO_SUCCESS, "msg":story_list})
+        return JsonResponse({"code":VIEW_STORY_PHOTO_SUCCESS, "objects":story_list})
+
+class CreateEventViewSet(APIView):
+    def post(self, request, *args, **kwars):
+        user_id = get_user_id(request)
+        if user_id is None:
+            return JsonResponse({"code":0,
+                                "msg": "token authentication failed"})
+        location = request.data.get("location")
+        start_time = request.data.get("start_time")
+        end_time = request.data.get("end_time")
+        related_people = request.data.get("related_people")
+        comment = request.data.get("comment")
+        name = request.data.get("name")
+        category = request.data.get("category")
+        try:
+            Event.objects.save(user_id=user_id, name=name, category=category, start_time=start_time, end_time=end_time, comment=comment, related_people=related_people)
+        except Exception as e:
+            return JsonResponse({"code":CREATE_EVENT_ERROR, "msg":"create event failed"})
+        return JsonResponse({"code":CREATE_EVENT_SUCCESS, "msg":"create event successfuly"})
+        
+class UpdateEventViewSet(APIView):
+    def post(self, request, *args, **kwargs):
+        user_id = get_user_id(request)
+        if user_id is None:
+            return JsonResponse({"code":0,
+                                "msg": "token authentication failed"})   
+        event = null    
+        id = request.data.get("id")
+        try:
+            event = Event.objects.get(id)
+        except Exception as e:
+            return JsonResponse({"code":0, "msg":"get event failed"})
+
+        location = request.data.get("location")
+        if location is not None:
+            event.location = location
+        
+        start_time = request.data.get("start_time")
+        if start_time is not None:
+            event.start_time = start_time
+        end_time = request.data.get("end_time")
+        if end_time is not None:
+            event.end_time = end_time
+        related_people = request.data.get("related_people")
+        if related_people is not None:
+            event.related_people = related_people
+        comment = request.data.get("comment")
+        if comment is not None:
+            event.comment = comment
+        name = request.data.get("name")
+        if name is not None:
+            event.name = name
+        category = request.data.get("category")
+        if category is not None:
+            event.category = category
+
+        try:
+           event.save()
+        except Exception as e:
+            return JsonResponse({"code":CREATE_EVENT_ERROR, "msg":"save event failed"})
+        return JsonResponse({"code":CREATE_EVENT_SUCCESS, "msg":"update event successfuly"}) 
+class DeleteEventViewSet(APIView):
+    def post(self, request, *args, **kwargs):
+        user_id = get_user_id(request)
+        if user_id is None:
+            return JsonResponse({"code":0,
+                                "msg":"token authentication failed"})
+                            
+        id = request.data.get("id")
+        try:
+            Event.objects.filter(id = id).delete()
+        except Exception as e:
+            return JsonResponse({"code":DELETE_EVENT_ERROR, "msg":"delete event failed"})
+        return JsonResponse({"code":DELETE_EVENT_SUCC, "msg":"delete event succ"})
