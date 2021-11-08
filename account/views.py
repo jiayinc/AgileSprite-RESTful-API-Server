@@ -131,6 +131,7 @@ class RegisterViewSet(APIView):
 
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
+        print(email)
         password = request.data.get('password')
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
@@ -181,3 +182,74 @@ class LoginViewSet(APIView):
         return JsonResponse({"code": ACCOUNT_LOGIN_SUCCESS,
                              "msg": MSG_ACCOUNT_LOGIN_SUCCESS,
                              "token": Token.objects.create(user=user).key})
+
+
+class ForgotPasswordViewSet(APIView):
+
+    def post(self, request, *args, **kwargs):
+
+        email = request.data.get('email')
+
+        if self.username_exists(email):
+            usr = User.objects.get(username=email)
+            name = usr.first_name + ' ' + usr.last_name
+            pwd = self.generateRandomPwd()
+            usr.set_password(pwd)
+            usr.save()
+            self.sendEmail(email, pwd, name)
+
+            return JsonResponse({"code": ACCOUNT_USERNAME_EXIST,
+                                 "msg": MSG_ACCOUNT_USERNAME_EXIST})
+        else:
+            return JsonResponse({"code": ACCOUNT_USERNAME_NOT_EXIST,
+                                 "msg": MSG_ACCOUNT_USERNAME_NOT_EXIST})
+
+    @staticmethod
+    def username_exists(username):
+        if User.objects.filter(username=username).exists():
+            return True
+
+        return False
+
+    @staticmethod
+    def sendEmail(to, pwd, name):
+        import email
+        import smtplib
+
+        gmail_user = 'AgileSpriteCRM@gmail.com'
+        gmail_password = 'vrsfctvtbkzjzisl'
+
+        msg = email.message.Message()
+        msg['From'] = gmail_user
+        msg['To'] = to
+        msg['Subject'] = "Agile Sprite CRM"
+        msg.add_header('Content-Type', 'text')
+        msg.set_payload(f"Hi, {name}. \n"
+                        f"Your new temporary password for Agile Sprite CRM is: \n\n{pwd}\n\n"
+                        f"Please login with your email {to} and reset your password ASAP. \n\n"
+                        f"Login: http://www.agilespritecrm.com/login\n")
+
+        try:
+            smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+            smtp_server.ehlo()
+            smtp_server.login(gmail_user, gmail_password)
+            smtp_server.sendmail(gmail_user, to, msg.as_string())
+            smtp_server.close()
+            print(f"Email successfully sent to {to} !")
+        except Exception as ex:
+            print(f"Something went wrong when sending email to {to}, {str(ex)}")
+
+    @staticmethod
+    def generateRandomPwd():
+        import random
+        import string
+        pwd = []
+        lower = string.ascii_lowercase
+        upper = string.ascii_uppercase
+        iterations = 4
+        for i in range(iterations):
+            pwd.append(lower[random.randint(0, len(lower)-1)])
+            pwd.append(lower[random.randint(0, len(upper)-1)])
+            pwd.append(str(random.randint(0, 9)))
+        random.shuffle(pwd)
+        return "".join(pwd)
