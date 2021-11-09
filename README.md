@@ -661,3 +661,131 @@ Users can delete a story
     "msg": "delete success"
 }
 ```
+### Group
+
+#### Create a Group
+
+Users can create a group
+
+- Request Type: POST
+- Request Address: /group/create/  
+- Request Fields:
+  - token: String
+  - name: String
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token":
+"3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "name":"group_test"
+}
+```
+
+- Sample Return:
+
+```
+# Successfully added 
+{
+    "code": 500,
+    "msg": "create group success"
+}
+```
+
+#### Add Contacts to Groups
+
+Users can add contacts to different group
+
+- Request Type: POST
+- Request Address: /group/add_contact_group/  
+- Request Fields:
+  - token: String
+  - group_id: Integer
+  - contact_id: Integer
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token": "3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "group_id":"1",
+    "contact_id":"1"
+}
+```
+
+- Sample Return:
+
+```
+{
+    "code": 500,
+    "msg": "add contact success"
+}
+```
+
+#### Delete Contacts From Groups
+
+Users can delete a contact from a group
+
+- Request Type: POST
+- Request Address: /group/delete_contact_group/  
+- Request Fields:
+  - token: String
+  - group_id: Integer
+  - contact_id: Integer
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token": "3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "group_id":"1",
+    "contact_id":"1"
+}
+```
+
+- Sample Return:
+
+```
+{
+    "code": 500,
+    "msg": "delete contact success"
+}
+```
+
+#### Delete a Group
+
+Users can delete a group
+
+- Request Type: POST
+- Request Address: /group/delete/  
+- Request Fields:
+  - token: String
+  - group_id: Integer
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token": "3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "id":"2"
+}
+```
+
+- Sample Return:
+
+```
+# Successfully deleted
+{
+    "code": 500,
+    "msg": "delete group sucess"
+}
+```
