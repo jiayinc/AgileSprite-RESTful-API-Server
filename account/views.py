@@ -138,7 +138,7 @@ class RegisterViewSet(APIView):
             validate_password(password)
             validate_email(email)
             User.objects.create_user(username=email, password=password, email=email, first_name=first_name,
-                                     last_name=last_name, birthday="1970-01-01")
+                                     last_name=last_name)
         except InvalidPassword as e:
             return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
                                  "msg": MSG_ACCOUNT_REGISTER_PASSWORD_INVALID})
@@ -149,7 +149,7 @@ class RegisterViewSet(APIView):
             else:
                 # Other unexpected errors occurred
                 return JsonResponse({"code": ACCOUNT_REGISTER_ERROR,
-                                     "msg": MSG_ACCOUNT_REGISTER_ERROR})
+                                     "msg": str(e)})
 
         return JsonResponse({"code": ACCOUNT_REGISTER_SUCCESS,
                              "msg": MSG_ACCOUNT_REGISTER_SUCCESS})
