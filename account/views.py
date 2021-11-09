@@ -138,7 +138,7 @@ class RegisterViewSet(APIView):
             validate_password(password)
             validate_email(email)
             User.objects.create_user(username=email, password=password, email=email, first_name=first_name,
-                                     last_name=last_name)
+                                     last_name=last_name, birthday="1970-01-01")
         except InvalidPassword as e:
             return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
                                  "msg": MSG_ACCOUNT_REGISTER_PASSWORD_INVALID})
@@ -247,8 +247,8 @@ class ForgotPasswordViewSet(APIView):
         upper = string.ascii_uppercase
         iterations = 4
         for i in range(iterations):
-            pwd.append(lower[random.randint(0, len(lower)-1)])
-            pwd.append(upper[random.randint(0, len(upper)-1)])
+            pwd.append(lower[random.randint(0, len(lower) - 1)])
+            pwd.append(upper[random.randint(0, len(upper) - 1)])
             pwd.append(str(random.randint(0, 9)))
         random.shuffle(pwd)
         return "".join(pwd)
