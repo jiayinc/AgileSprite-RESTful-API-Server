@@ -7,3 +7,4 @@ from django.contrib.auth.models import User, AbstractUser
 
 class ExtendedUser(AbstractUser):
     date_of_birth = models.DateTimeField(auto_now_add=True)
+    # date_of_birth = '1970-01-01'
