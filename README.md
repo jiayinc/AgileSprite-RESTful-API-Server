@@ -789,3 +789,149 @@ Users can delete a group
     "msg": "delete group sucess"
 }
 ```
+### Calendar
+
+#### Create a Event
+
+Users can create a  event in calendar.
+
+- Request Type: POST
+- Request Address: /calendar/create_event/  
+- Request Fields:
+  - token: String
+  - location: String
+  - start_time: Date
+  - end_time: Date
+  - related_people: String
+  - comment: String
+  - name: String
+  - category: String
+  - date: Date
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token": "3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "location":"baotou",
+    "start_time":"2021-11-11 10:10",
+    "end_time":"2021-11-11 10:10",
+    "related_people":"dlx",
+    "comment":"love", "name":"express love",
+    "category":"life", "date":"2021-11-01"
+}
+```
+
+- Sample Return:
+
+```
+{
+    "code": 500, 
+    "msg": "create event successfuly"
+}
+```
+
+
+
+#### Get the day of a Event
+
+Users can edit event's detail in case it may change in the future
+
+- Request Type: POST
+- Request Address: /calendar/get_day_events/  
+- Request Fields:
+  - token: String
+  - date: Date
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token": "3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "date":"2021-11-01" 
+}
+```
+
+- Sample Return:
+
+```
+{
+"code": 500, "jobects": "[{"model": "mycalendar.event", "pk": 2, "fields": {"name": "express love", "user_id": "1", "location": "baotou", "start_time": "2021-11-11T10:10:00Z", "end_time": "2021-11-11T10:10:00Z", "related_people": "dlx", "date": "2021-11-01", "comments": "love", "category": "life"}}]"
+}
+```
+
+
+
+#### Update the Event
+
+Users can edit event's detail in case it may change in the future
+
+- Request Type: POST
+- Request Address: /calendar/update_event/  
+- Request Fields:
+  - token: String
+  - location: String
+  - start_time: Date
+  - end_time: Date
+  - related_people: String
+  - comment: String
+  - name: String
+  - category: String
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+"token":"3067a0ce9c21c40dbd573695e517bcae186525d6",
+"id":"2","location":"baotou","name":"express love"
+}
+```
+
+- Sample Return:
+
+```
+{
+    "code": 500,
+    "msg": "update event successfuly"
+}
+```
+
+
+
+#### Delete a Event
+
+Users can delete a event
+
+- Request Type: POST
+- Request Address: /calendar/delete_event/  
+- Request Fields:
+  - token: String
+  - id: Integer
+- Return Fields:
+  - code: Integer
+  - msg: String
+- Sample Request:
+
+```
+{
+    "token": "3067a0ce9c21c40dbd573695e517bcae186525d6",
+    "id":"1" 
+}
+```
+
+- Sample Return:
+
+```
+# Successfully deleted
+{
+    "code": 500,
+    "msg": "delete event succ"
+}
+```
+
