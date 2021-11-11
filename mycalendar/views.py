@@ -11,6 +11,7 @@ from contact.models import Contact
 from mycalendar.models import Event
 from common.common import get_user_id
 from common.code import *
+from django.core import serializers
 
 
 class ReminderBirthdayViewSet(APIView):
@@ -57,24 +58,24 @@ class CreateEventViewSet(APIView):
         comment = request.data.get("comment")
         name = request.data.get("name")
         category = request.data.get("category")
+        date = request.data.get("date")
+        print(date + location + start_time + end_time + name + category + related_people + comment)
         try:
-            Event.objects.save(user_id=user_id, name=name, category=category, start_time=start_time, end_time=end_time, comment=comment, related_people=related_people)
+            Event.objects.create(date = date, user_id=user_id, name=name, category=category, start_time=start_time, end_time=end_time, comments=comment, related_people=related_people)
         except Exception as e:
-            return JsonResponse({"code":CREATE_EVENT_ERROR, "msg":"create event failed"})
+            return JsonResponse({"code":CREATE_EVENT_ERROR, "msg":"create event failed" + str(e)})
         return JsonResponse({"code":CREATE_EVENT_SUCCESS, "msg":"create event successfuly"})
-        
 class UpdateEventViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
             return JsonResponse({"code":0,
-                                "msg": "token authentication failed"})   
-        event = null    
+                                "msg": "token authentication failed"})     
         id = request.data.get("id")
         try:
-            event = Event.objects.get(id)
+            event = Event.objects.get(id = id)
         except Exception as e:
-            return JsonResponse({"code":0, "msg":"get event failed"})
+            return JsonResponse({"code":0, "msg":"get event failed " + str(e)})
 
         location = request.data.get("location")
         if location is not None:
@@ -91,7 +92,7 @@ class UpdateEventViewSet(APIView):
             event.related_people = related_people
         comment = request.data.get("comment")
         if comment is not None:
-            event.comment = comment
+            event.comments = comment
         name = request.data.get("name")
         if name is not None:
             event.name = name
@@ -117,3 +118,15 @@ class DeleteEventViewSet(APIView):
         except Exception as e:
             return JsonResponse({"code":DELETE_EVENT_ERROR, "msg":"delete event failed"})
         return JsonResponse({"code":DELETE_EVENT_SUCC, "msg":"delete event succ"})
+class GetDayEventsViewSet(APIView):
+    def post(self, request, *args, **kwargs):
+        user_id = get_user_id(request)
+        if user_id is None:
+            return JsonResponse({"code":0, 
+                                "msg":"token authentication failed"})
+        date = request.data.get("date")
+        try:
+            event_list = serializers.serialize("json", Event.objects.filter(date = date, user_id = user_id))
+        except Exception as e:
+            return JsonResponse({"code":GET_EVENT_ERROR, "msg":"get event failed"})
+        return JsonResponse({"code":GET_EVENT_SUCC,"jobects": event_list})
