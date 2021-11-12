@@ -791,7 +791,7 @@ Users can delete a group
 ```
 ### Calendar
 
-#### Create a Event
+#### Create an Event
 
 Users can create a  event in calendar.
 
@@ -835,7 +835,7 @@ Users can create a  event in calendar.
 
 
 
-#### Get the day of a Event
+#### Get the day of an Event
 
 Users can edit event's detail in case it may change in the future
 
@@ -904,7 +904,7 @@ Users can edit event's detail in case it may change in the future
 
 
 
-#### Delete a Event
+#### Delete an Event
 
 Users can delete a event
 
