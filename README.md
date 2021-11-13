@@ -722,7 +722,7 @@ Users can add contacts to different group
 
 ```
 {
-    "code": 500,
+    "code": 507,
     "msg": "add contact success"
 }
 ```
@@ -754,7 +754,7 @@ Users can delete a contact from a group
 
 ```
 {
-    "code": 500,
+    "code": 504,
     "msg": "delete contact success"
 }
 ```
@@ -785,7 +785,7 @@ Users can delete a group
 ```
 # Successfully deleted
 {
-    "code": 500,
+    "code": 503,
     "msg": "delete group sucess"
 }
 ```
@@ -828,7 +828,7 @@ Users can create a  event in calendar.
 
 ```
 {
-    "code": 500, 
+    "code": 513, 
     "msg": "create event successfuly"
 }
 ```
@@ -860,7 +860,7 @@ Users can edit event's detail in case it may change in the future
 
 ```
 {
-"code": 500, "jobects": "[{"model": "mycalendar.event", "pk": 2, "fields": {"name": "express love", "user_id": "1", "location": "baotou", "start_time": "2021-11-11T10:10:00Z", "end_time": "2021-11-11T10:10:00Z", "related_people": "dlx", "date": "2021-11-01", "comments": "love", "category": "life"}}]"
+"code": 517, "jobects": "[{"model": "mycalendar.event", "pk": 2, "fields": {"name": "express love", "user_id": "1", "location": "baotou", "start_time": "2021-11-11T10:10:00Z", "end_time": "2021-11-11T10:10:00Z", "related_people": "dlx", "date": "2021-11-01", "comments": "love", "category": "life"}}]"
 }
 ```
 
@@ -897,7 +897,7 @@ Users can edit event's detail in case it may change in the future
 
 ```
 {
-    "code": 500,
+    "code": 513,
     "msg": "update event successfuly"
 }
 ```
@@ -930,7 +930,7 @@ Users can delete a event
 ```
 # Successfully deleted
 {
-    "code": 500,
+    "code": 515,
     "msg": "delete event succ"
 }
 ```
