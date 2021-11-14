@@ -87,7 +87,6 @@ local_settings.py
 
 .env
 db.sqlite3
-0001_initial.py
 .idea/
 
 # Created by https://www.gitignore.io/api/intellij
