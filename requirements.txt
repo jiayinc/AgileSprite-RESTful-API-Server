@@ -3,3 +3,4 @@ djangorestframework~=3.12.4
 django-rest-auth~=0.9.5
 gunicorn~=20.1.0
 dj_database_url
+psycopg2
