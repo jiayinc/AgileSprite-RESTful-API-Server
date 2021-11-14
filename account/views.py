@@ -116,6 +116,7 @@ class UpdateViewSet(APIView):
             user_obj.save()
         except Exception as e:
             if (type(e) == InvalidEmail) or ("account_extendeduser" in str(e) and "username" in str(e)):
+
                 return JsonResponse({"code": ACCOUNT_UPDATE_EMAIL_INVALID,
                                      "msg": MSG_ACCOUNT_UPDATE_EMAIL_INVALID})
             else:

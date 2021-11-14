@@ -6,5 +6,5 @@ from django.contrib.auth.models import User, AbstractUser
 
 
 class ExtendedUser(AbstractUser):
-    birthday = models.DateField(default="1901-01-01")
+    birthday = models.DateField(default="1970-01-01")
     # date_of_birth = '1970-01-01'
