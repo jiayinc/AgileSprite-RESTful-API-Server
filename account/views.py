@@ -115,7 +115,7 @@ class UpdateViewSet(APIView):
                 user_obj.username = email
             user_obj.save()
         except Exception as e:
-            if (type(e) == InvalidEmail) or ("account_extendeduser.username" in str(e)):
+            if (type(e) == InvalidEmail) or ("account_extendeduser" in str(e) and "username" in str(e)):
                 return JsonResponse({"code": ACCOUNT_UPDATE_EMAIL_INVALID,
                                      "msg": MSG_ACCOUNT_UPDATE_EMAIL_INVALID})
             else:
@@ -143,7 +143,7 @@ class RegisterViewSet(APIView):
             return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
                                  "msg": MSG_ACCOUNT_REGISTER_PASSWORD_INVALID})
         except Exception as e:
-            if (type(e) == InvalidEmail) or ("account_extendeduser.username" in str(e)):
+            if (type(e) == InvalidEmail) or ("account_extendeduser" in str(e) and "username" in str(e)):
                 return JsonResponse({"code": ACCOUNT_REGISTER_EMAIL_INVALID,
                                      "msg": MSG_ACCOUNT_REGISTER_EMAIL_INVALID})
             else:
