@@ -103,8 +103,8 @@ class UpdateEventViewSet(APIView):
         try:
            event.save()
         except Exception as e:
-            return JsonResponse({"code":CREATE_EVENT_ERROR, "msg":"save event failed"})
-        return JsonResponse({"code":CREATE_EVENT_SUCCESS, "msg":"update event successfuly"}) 
+            return JsonResponse({"code":UPDATE_EVENT_ERROR, "msg":"save event failed"})
+        return JsonResponse({"code":UPDATE_EVENT_SUCCESS, "msg":"update event successfuly"}) 
 class DeleteEventViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
