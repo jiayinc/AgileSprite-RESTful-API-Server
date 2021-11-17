@@ -897,7 +897,7 @@ Users can edit event's detail in case it may change in the future
 
 ```
 {
-    "code": 513,
+    "code": 519,
     "msg": "update event successfuly"
 }
 ```
