@@ -71,7 +71,7 @@ class GetViewSet(APIView):
                              "msg": MSG_ACCOUNT_GET_SUCCESS,
                              "details": {
                                  'email': user.email,
-                                 'birthday': user.date_of_birth,
+                                 'birthday': user.birthday,
                                  'first_name': user.first_name,
                                  'last_name': user.last_name,
                              }})
@@ -99,7 +99,7 @@ class UpdateViewSet(APIView):
         if last_name is not None:
             user_obj.last_name = last_name
         if birthday is not None:
-            user_obj.date_of_birth = birthday
+            user_obj.birthday = birthday
         if password is not None:
             try:
                 validate_password(password)
@@ -138,7 +138,7 @@ class RegisterViewSet(APIView):
             validate_password(password)
             validate_email(email)
             User.objects.create_user(username=email, password=password, email=email, first_name=first_name,
-                                     last_name=last_name)
+                                     last_name=last_name, birthday="1970-01-01")
         except InvalidPassword as e:
             return JsonResponse({"code": ACCOUNT_REGISTER_PASSWORD_INVALID,
                                  "msg": MSG_ACCOUNT_REGISTER_PASSWORD_INVALID})
