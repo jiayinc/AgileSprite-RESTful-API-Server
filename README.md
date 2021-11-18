@@ -495,6 +495,7 @@ Users can add a contact's story
 ```
 {
     'token': '611088d71f3044dd640b9f9209e92d60786a0d5a',
+    'contact_id': 3,
     'location': 'mel',
     'content': 'what???',
     'date': 2020-01-21
