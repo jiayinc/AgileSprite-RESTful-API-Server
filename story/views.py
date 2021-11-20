@@ -10,12 +10,12 @@ class GetAllViewSet(APIView):
     def post(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         if user_id is None:
-            return JsonResponse({"code": 0,
+            return JsonResponse({"code": ACCOUNT_TOKEN_ERROR,
                                  "msg": "token authentication failed"})
         contact_id = request.data.get('contact_id')
         stories = Story.objects.filter(contact_id=contact_id, user_id=user_id)
 
-        return JsonResponse({"code": 0,
+        return JsonResponse({"code": STORY_GET_ALL_SUCCESS,
                              "msg": "get success",
                              "contacts": list(stories.values())})
 
