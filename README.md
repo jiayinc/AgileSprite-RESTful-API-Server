@@ -520,7 +520,7 @@ Users can get stories of a contact
 - Return Fields:
     - code: Integer
     - msg: String
-    - contacts: List of Stories, where each story contains
+    - Stories: List of Stories, where each story contains
       - id: Integer, story's ID
       - contact_id: Integer
       - location: String
@@ -538,7 +538,7 @@ Users can get stories of a contact
 {
     "code": 405,
     "msg": "get success",
-    "contacts": [
+    "Stories": [
         {
             "id": 2,
             "contact_id": 1,
@@ -561,7 +561,7 @@ Users can get a story of a contact
 - Return Fields:
     - code: Integer
     - msg: String
-    - contacts: List of Stories, where each story contains
+    - Stories: List of Stories, where each story contains
       - id: Integer, story's ID
       - contact_id: Integer
       - location: String
@@ -580,7 +580,7 @@ Users can get a story of a contact
 {
     "code": 410,
     "msg": "get success",
-    "contacts": [
+    "Stories": [
         {
             "id": 2,
             "contact_id": 1,
