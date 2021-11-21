@@ -17,7 +17,7 @@ class GetAllViewSet(APIView):
 
         return JsonResponse({"code": STORY_GET_ALL_SUCCESS,
                              "msg": "get success",
-                             "contacts": list(stories.values())})
+                             "Stories": list(stories.values())})
 
 class AddViewSet(APIView):
 
@@ -60,7 +60,7 @@ class GetViewSet(APIView):
 
         return JsonResponse({"code": STORY_GET_SUCCESS,
                              "msg": "get success",
-                             "contacts": list(stories.values())})
+                             "Stories": list(stories.values())})
 
 
 class DeleteViewSet(APIView):
